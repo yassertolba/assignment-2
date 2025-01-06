@@ -7,7 +7,7 @@
 
 Ansible is a software that automates software provisioning, configuration management, and application deployment.
 
-### Why Ansible?
+### Why Ansible? [^1]
 
 Ansible is favored due to the many benefits it provides, including:
 
@@ -27,7 +27,7 @@ Ansible is favored due to the many benefits it provides, including:
 
 ## 2. Describe the main components of Ansible and their roles in automation. Provide examples where necessary
 
-### Ansible Components
+### Ansible Components [^1]
 
 1. **Control Node**
 2. **Managed Nodes**
@@ -347,6 +347,8 @@ class LookupModule(LookupBase):
 3. **Playbook**: In the playbook, the custom lookup plugin is used with the `lookup` function to read the data from the `data.json` file and display it using the `debug` module.
 
 ---
+
+[^1]: [Practical Ansible Configuration Management from Start to Finish - Second Edition](https://doi.org/10.1007/978-1-4842-8643-2)
 
 ## 3. Write an Ansible roles
 
