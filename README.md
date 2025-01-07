@@ -5,6 +5,18 @@ Trainee Name: Yasser Ahmed Abdalaziz Tolba
 Group: ALX2_SWD1_G1
 --- 
 
+---
+title: "Fwd: Fw: IM7316377 - yasser.a.work.2022@gmail.com - Gmail"
+source: https://mail.google.com/mail/u/3/#inbox/FMfcgzQVwnVKDbFnDkDlWLdfZFxZdcxC
+author:
+  - "[[Gmail]]"
+published: 
+created: 2025-01-07
+description: Google's approach to email
+tags:
+  - clippings
+---
+
 ## 1. What is Ansible? Explain its main purpose and advantages in IT automation
 
 Ansible is a software that automates software provisioning, configuration management, and application deployment.
