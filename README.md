@@ -1,7 +1,7 @@
 # DevOps Assignment 2: Linux Basics and Networking
 
-** Trainee Name: Yasser Ahmed Abdalaziz Tolba **
-** Group: ALX2_SWD1_G1 **
+**Trainee Name: Yasser Ahmed Abdalaziz Tolba**
+**Group: ALX2_SWD1_G1**
 
 ## 1. What is Ansible? Explain its main purpose and advantages in IT automation
 
