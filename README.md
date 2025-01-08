@@ -1,8 +1,7 @@
-# DevOps Assignment 2: Linux Basics and Networking
+# DevOps Assignment 2: Ansible
 
-**Trainee Name: Yasser Ahmed Abdalaziz Tolba**
-
-**Group: ALX2_SWD1_G1**
+**Trainee Name: Yasser Ahmed**  
+**Group: ALX2_SWD1_G1**  
 
 ## 1. What is Ansible? Explain its main purpose and advantages in IT automation
 
@@ -414,6 +413,24 @@ roles/
     src: sonar.properties.j2
     dest: /opt/sonarqube-9.2.1.49989/conf/sonar.properties
 
+# ensure sonarqube group and user exist
+- name: Add group "sonarqube" 
+  group:
+    name: sonarqube
+
+- name: Add user "sonarqube" 
+  user:
+    name: sonarqube
+    group: sonarqube
+
+# Change ownership of sonarqube files
+- name: Change ownership of Nexus files
+  file:
+    path: /opt/sonarqube-9.2.1.49989/conf/sonar.properties
+    owner: sonarqube
+    group: sonarqube
+    recurse: yes  
+
 # Create a systemd service for SonarQube
 - name: Create SonarQube systemd service
   copy:
@@ -423,7 +440,7 @@ roles/
       After=network.target
 
       [Service]
-      Type=forking
+      Type=simple
       ExecStart=/opt/sonarqube-9.2.1.49989/bin/linux-x86-64/sonar.sh start
       ExecStop=/opt/sonarqube-9.2.1.49989/bin/linux-x86-64/sonar.sh stop
       User=sonarqube
@@ -543,13 +560,23 @@ roles/
     dest: /opt/
     remote_src: yes
 
+# ensure nexus group and user exist
+- name: Ensure nexus group exists
+  group:
+    name: nexus
+
+- name: Ensure nexus user exists
+  user:
+    name: nexus
+    group: nexus
+
 # Change ownership of Nexus files
 - name: Change ownership of Nexus files
   file:
-    path: /opt/nexus-3.*
+    path: /opt/nexus-3.75.1-01
     owner: nexus
     group: nexus
-    recurse: yes
+    recurse: yes  
 
 # Create a systemd service for Nexus
 - name: Create Nexus systemd service
@@ -561,8 +588,8 @@ roles/
 
       [Service]
       Type=forking
-      ExecStart=/opt/nexus-3.*/bin/nexus start
-      ExecStop=/opt/nexus-3.*/bin/nexus stop
+      ExecStart=/opt/nexus-3.75.1-01/bin/nexus start
+      ExecStop=/opt/nexus-3.75.1-01/bin/nexus stop
       User=nexus
       Group=nexus
       Restart=always
