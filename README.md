@@ -386,19 +386,48 @@ roles/
   apt:
     update_cache: yes
 
-# Install Java (SonarQube dependency)
-- name: Install Java
+# Install SonarQube dependency (unzip, Java and PostgreSQL)
+- name: Install SonarQube dependency (unzip, Java and PostgreSQL)
   apt:
     name: 
       - openjdk-11-jdk
       - unzip
+      - postgresql
+      - postgresql-contrib
     state: present
+
+# Ensure PostgreSQL is running
+- name: Ensure PostgreSQL is running
+  systemd:
+    name: postgresql
+    state: started
+    enabled: yes
+
+  # Create SonarQube database user
+- name: Create SonarQube DB user
+  become_user: postgres
+  postgresql_user:
+    name: sonarqube
+    password: sonar
+
+ # Create SonarQube database
+- name: Create SonarQube database
+  become_user: postgres
+  postgresql_db:
+    name: sonarqube
+    owner: sonarqube
+
+- name: Check if SonarQube zip file exists 
+  stat: 
+    path: /tmp/sonarqube.zip 
+    register: sonarqube_zip
 
 # Download SonarQube
 - name: Download SonarQube
   get_url:
     url: https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-9.2.1.49989.zip
     dest: /tmp/sonarqube.zip
+  when: not sonarqube_zip.stat.exists
 
 # Unzip SonarQube
 - name: Unzip SonarQube
@@ -406,6 +435,7 @@ roles/
     src: /tmp/sonarqube.zip
     dest: /opt/
     remote_src: yes
+    creates: /opt/sonarqube-9.2.1.49989
 
 # Configure SonarQube
 - name: Configure SonarQube
@@ -440,7 +470,7 @@ roles/
       After=network.target
 
       [Service]
-      Type=simple
+      Type=forking
       ExecStart=/opt/sonarqube-9.2.1.49989/bin/linux-x86-64/sonar.sh start
       ExecStop=/opt/sonarqube-9.2.1.49989/bin/linux-x86-64/sonar.sh stop
       User=sonarqube
@@ -511,7 +541,9 @@ Ubuntu_root_2 ansible_host=192.168.59.144 ansible_user=root ansible_ssh_pass="12
 
 ```
 
-![sonarqube test](sonarqube.jpg)
+![sonarqube ansible play](sonarqube.jpg)
+
+![sonarqube status](sonarqube_status.jpg)
 
 ### Role 2: Nexus Repository Manager
 
