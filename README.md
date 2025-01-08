@@ -424,7 +424,7 @@ roles/
     group: sonarqube
 
 # Change ownership of sonarqube files
-- name: Change ownership of Nexus files
+- name: Change ownership of sonarqube files
   file:
     path: /opt/sonarqube-9.2.1.49989/conf/sonar.properties
     owner: sonarqube
