@@ -403,12 +403,22 @@ roles/
     state: started
     enabled: yes
 
+# ensure postgres group and user exist
+- name: Add group "postgres" 
+  group:
+    name: postgres
+
+- name: Add user "postgres" 
+  user:
+    name: postgres
+    group: postgres
+
   # Create SonarQube database user
 - name: Create SonarQube DB user
   become_user: postgres
   postgresql_user:
     name: sonarqube
-    password: sonar
+    password: sonarqube
 
  # Create SonarQube database
 - name: Create SonarQube database
@@ -514,6 +524,8 @@ sonar.jdbc.url=jdbc:postgresql://localhost/sonarqube
 # Variables for SonarQube configuration
 sonarqube_db_user: sonar
 sonarqube_db_password: sonar 
+
+ansible_python_interpreter: /usr/bin/python3.8
 ```
 
 #### sonar_playbook.yml
@@ -541,9 +553,77 @@ Ubuntu_root_2 ansible_host=192.168.59.144 ansible_user=root ansible_ssh_pass="12
 
 ```
 
+
+```terminal
+root@kane:/home/yasser/ansible/sonarqube# ansible-playbook -i hosts sonar_playbook.yml 
+
+PLAY [sonarqube playbook] *******************************************************************************************************************************************************************************
+
+TASK [Gathering Facts] **********************************************************************************************************************************************************************************
+ok: [Ubuntu_root_2]
+
+TASK [sonarqube : Update apt cache] *********************************************************************************************************************************************************************
+changed: [Ubuntu_root_2]
+
+TASK [sonarqube : Install SonarQube dependency (unzip, Java and PostgreSQL)] ****************************************************************************************************************************
+ok: [Ubuntu_root_2]
+
+TASK [sonarqube : Ensure PostgreSQL is running] *********************************************************************************************************************************************************
+ok: [Ubuntu_root_2]
+
+TASK [sonarqube : Add group "postgres"] *****************************************************************************************************************************************************************
+ok: [Ubuntu_root_2]
+
+TASK [sonarqube : Add user "postgres"] ******************************************************************************************************************************************************************
+ok: [Ubuntu_root_2]
+
+TASK [sonarqube : Create SonarQube DB user] *************************************************************************************************************************************************************
+changed: [Ubuntu_root_2]
+
+TASK [sonarqube : Create SonarQube database] ************************************************************************************************************************************************************
+changed: [Ubuntu_root_2]
+
+TASK [sonarqube : Check if SonarQube zip file exists] ***************************************************************************************************************************************************
+ok: [Ubuntu_root_2]
+
+TASK [sonarqube : Download SonarQube] *******************************************************************************************************************************************************************
+skipping: [Ubuntu_root_2]
+
+TASK [sonarqube : Unzip SonarQube] **********************************************************************************************************************************************************************
+changed: [Ubuntu_root_2]
+
+TASK [sonarqube : Configure SonarQube] ******************************************************************************************************************************************************************
+changed: [Ubuntu_root_2]
+
+TASK [sonarqube : Add group "sonarqube"] ****************************************************************************************************************************************************************
+changed: [Ubuntu_root_2]
+
+TASK [sonarqube : Add user "sonarqube"] *****************************************************************************************************************************************************************
+changed: [Ubuntu_root_2]
+
+TASK [sonarqube : Change ownership of sonarqube files] **************************************************************************************************************************************************
+changed: [Ubuntu_root_2]
+
+TASK [sonarqube : Create SonarQube systemd service] *****************************************************************************************************************************************************
+changed: [Ubuntu_root_2]
+
+TASK [sonarqube : Enable and start SonarQube service] ***************************************************************************************************************************************************
+changed: [Ubuntu_root_2]
+
+RUNNING HANDLER [sonarqube : Restart SonarQube] *********************************************************************************************************************************************************
+changed: [Ubuntu_root_2]
+
+PLAY RECAP **********************************************************************************************************************************************************************************************
+Ubuntu_root_2              : ok=17   changed=11   unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+
+root@kane:/home/yasser/ansible/sonarqube# 
+
+```
 ![sonarqube ansible play](sonarqube.jpg)
 
 ![sonarqube status](sonarqube_status.jpg)
+
+![postgresql status](postgresql.jpg)
 
 ### Role 2: Nexus Repository Manager
 
