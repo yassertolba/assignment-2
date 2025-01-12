@@ -747,6 +747,8 @@ roles/
     - nexus
 ```
 
+#### hosts
+
 ```ini
 ; [myenv]
 ; localhost ansible_connection=local
