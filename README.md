@@ -553,6 +553,7 @@ Ubuntu_root_2 ansible_host=192.168.59.144 ansible_user=root ansible_ssh_pass="12
 
 ```
 
+#### Terminal Output
 
 ```terminal
 root@kane:/home/yasser/ansible/sonarqube# ansible-playbook -i hosts sonar_playbook.yml 
