@@ -646,25 +646,25 @@ roles/
   apt:
     update_cache: yes
 
-# Install Java (Nexus dependency)
-- name: Install Java
+# Install Nexus dependency (Java and unzip)
+- name: Install Nexus dependency (Java and unzip)
   apt:
     name: 
       - openjdk-11-jdk
       - unzip
     state: present
 
-# Create nexus user
-- name: Create nexus user
-  user:
-    name: nexus
-    shell: /bin/bash
+- name: Check if nexus zip file exists 
+  stat: 
+    path: /tmp/nexus.tar.gz
+  register: nexus_tar_gz
 
 # Download Nexus Repository Manager
 - name: Download Nexus
   get_url:
-    url: https://download.sonatype.com/nexus/3/latest-unix.tar.gz
+    url: https://download.sonatype.com/nexus/3/nexus-3.75.1-01.tar.gz
     dest: /tmp/nexus.tar.gz
+  when: not nexus_tar_gz.stat.exists 
 
 # Unzip Nexus Repository Manager
 - name: Unzip Nexus
@@ -674,11 +674,11 @@ roles/
     remote_src: yes
 
 # ensure nexus group and user exist
-- name: Ensure nexus group exists
+- name: Add group "nexus" 
   group:
     name: nexus
 
-- name: Ensure nexus user exists
+- name: Add user "nexus" 
   user:
     name: nexus
     group: nexus
@@ -689,7 +689,7 @@ roles/
     path: /opt/nexus-3.75.1-01
     owner: nexus
     group: nexus
-    recurse: yes  
+    recurse: yes
 
 # Create a systemd service for Nexus
 - name: Create Nexus systemd service
@@ -734,9 +734,14 @@ roles/
 
 ```yaml
 ---
+---
+---
 - name: nexus playbook  # Playbook name
   hosts: all # Run the playbook on all hosts
   become: yes # Run the playbook as root
+
+  vars:
+    ansible_python_interpreter: /usr/bin/python3.8
 
   roles:  # Run the roles
     - nexus
@@ -753,4 +758,55 @@ Ubuntu_root_2 ansible_host=192.168.59.144 ansible_user=root ansible_ssh_pass="12
 
 ```
 
+#### Terminal Output
+
+```terminal
+root@kane:/home/yasser/ansible/nexus# ansible-playbook -i hosts nexus_playbook.yml 
+
+PLAY [nexus playbook] ****************************************************************************************************************************************************
+
+TASK [Gathering Facts] ***************************************************************************************************************************************************
+ok: [Ubuntu_root_2]
+
+TASK [nexus : Update apt cache] ******************************************************************************************************************************************
+changed: [Ubuntu_root_2]
+
+TASK [nexus : Install Nexus dependency (Java and unzip)] *****************************************************************************************************************
+ok: [Ubuntu_root_2]
+
+TASK [nexus : Check if nexus zip file exists] ****************************************************************************************************************************
+ok: [Ubuntu_root_2]
+
+TASK [nexus : Download Nexus] ********************************************************************************************************************************************
+skipping: [Ubuntu_root_2]
+
+TASK [nexus : Unzip Nexus] ***********************************************************************************************************************************************
+changed: [Ubuntu_root_2]
+
+TASK [nexus : Add group "nexus"] *****************************************************************************************************************************************
+changed: [Ubuntu_root_2]
+
+TASK [nexus : Add user "nexus"] ******************************************************************************************************************************************
+changed: [Ubuntu_root_2]
+
+TASK [nexus : Change ownership of Nexus files] ***************************************************************************************************************************
+changed: [Ubuntu_root_2]
+
+TASK [nexus : Create Nexus systemd service] ******************************************************************************************************************************
+changed: [Ubuntu_root_2]
+
+TASK [nexus : Enable and start Nexus service] ****************************************************************************************************************************
+changed: [Ubuntu_root_2]
+
+RUNNING HANDLER [nexus : Restart Nexus] **********************************************************************************************************************************
+changed: [Ubuntu_root_2]
+
+PLAY RECAP ***************************************************************************************************************************************************************
+Ubuntu_root_2              : ok=11   changed=8    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+
+root@kane:/home/yasser/ansible/nexus# 
+```
+
 ![nexus test](nexus.jpg)
+
+![nexus_status](nexus_status.jpg)
