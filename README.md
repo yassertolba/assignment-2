@@ -3,7 +3,7 @@
 **Trainee Name: Yasser Ahmed**  
 **Group: ALX2_SWD1_G1**  
 
-## Navigation
+## Table of Contents
 
 - [Introduction](#1-what-is-ansible-explain-its-main-purpose-and-advantages-in-it-automation)
   - [What is Ansible?](#1-what-is-ansible-explain-its-main-purpose-and-advantages-in-it-automation)
