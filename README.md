@@ -3,6 +3,50 @@
 **Trainee Name: Yasser Ahmed**  
 **Group: ALX2_SWD1_G1**  
 
+## Navigation
+
+- [Introduction](#1-what-is-ansible-explain-its-main-purpose-and-advantages-in-it-automation)
+  - [What is Ansible?](#1-what-is-ansible-explain-its-main-purpose-and-advantages-in-it-automation)
+  - [Why Ansible?](#why-ansible-1)
+
+- [Main Components of Ansible](#2-describe-the-main-components-of-ansible-and-their-roles-in-automation-provide-examples-where-necessary)
+  - [1. Control Node](#1-control-node)
+  - [2. Managed Nodes](#2-managed-nodes)
+  - [3. Inventory](#3-inventory)
+  - [4. Modules](#4-modules)
+  - [5. Playbooks](#5-playbooks)
+  - [6. Variables](#6-variables)
+  - [7. Handlers](#7-handlers)
+  - [8. Roles](#8-roles)
+  - [9. Templates](#9-templates)
+  - [10. Ansible Vault](#10-ansible-vault)
+  - [11. ansible-galaxy](#11-ansible-galaxy)
+  - [12. Plugins](#12-plugins)
+    - [Inventory Plugin](#inventory-plugin)
+    - [Callback Plugin](#callback-plugin)
+    - [Lookup Plugin](#lookup-plugin)
+
+- [3. Write an Ansible roles](#3-write-an-ansible-roles)
+  - [Role 1: SonarQube](#role-1-sonarqube)
+    - [Directory Structure](#sonarqube-directory-structure)
+    - [sonarqube/tasks/main.yml](#sonarqubetasksmainyml)
+    - [handlers/main.yml](#handlersmainyml)
+    - [templates/sonar.properties.j2](#templatessonarpropertiesj2)
+    - [vars/main.yml](#varsmainyml)
+    - [sonar_playbook.yml](#sonar_playbookyml)
+    - [hosts](#hosts)
+    - [Terminal Output](#terminal-output)
+
+  - [Role 2: Nexus Repository Manager](#role-2-nexus-repository-manager)
+    - [Nexus Directory Structure](#nexus-directory-structure)
+    - [nexus/tasks/main.yml](#nexustasksmainyml)
+    - [nexus/handlers/main.yml](#nexushandlersmainyml)
+    - [nexus_playbook.yml](#nexus_playbookyml)
+    - [hosts](#hosts-1)
+    - [Terminal Output](#terminal-output-1)
+
+---
+
 ## 1. What is Ansible? Explain its main purpose and advantages in IT automation
 
 Ansible is a software that automates software provisioning, configuration management, and application deployment.
@@ -620,6 +664,7 @@ Ubuntu_root_2              : ok=17   changed=11   unreachable=0    failed=0    s
 root@kane:/home/yasser/ansible/sonarqube# 
 
 ```
+
 ![sonarqube ansible play](sonarqube.jpg)
 
 ![sonarqube status](sonarqube_status.jpg)
@@ -747,7 +792,7 @@ roles/
     - nexus
 ```
 
-#### hosts
+#### Hosts
 
 ```ini
 ; [myenv]
@@ -760,7 +805,7 @@ Ubuntu_root_2 ansible_host=192.168.59.144 ansible_user=root ansible_ssh_pass="12
 
 ```
 
-#### Terminal Output
+#### Terminal output
 
 ```terminal
 root@kane:/home/yasser/ansible/nexus# ansible-playbook -i hosts nexus_playbook.yml 
