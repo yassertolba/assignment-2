@@ -1,0 +1,9 @@
+---
+- name: sonarqube playbook  # Playbook name
+  hosts: all # Run the playbook on all hosts
+  become: yes # Run the playbook as root
+
+  roles:  # Run the roles
+    - sonarqube
+
+    

@@ -1,0 +1,5 @@
+# Variables for SonarQube configuration
+sonarqube_db_user: sonar
+sonarqube_db_password: sonar
+
+# ansible_python_interpreter: /usr/bin/python3.8

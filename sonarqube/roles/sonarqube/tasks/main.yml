@@ -1,0 +1,116 @@
+- name: Update apt cache
+  apt:
+    update_cache: yes
+
+# Install SonarQube dependency (unzip, Java and PostgreSQL)
+- name: Install SonarQube dependency (unzip, Java and PostgreSQL)
+  apt:
+    name: 
+      - openjdk-11-jdk
+      - unzip
+      - postgresql
+      - postgresql-contrib
+    state: present
+
+# Ensure PostgreSQL is running
+- name: Ensure PostgreSQL is running
+  systemd:
+    name: postgresql
+    state: started
+    enabled: yes
+
+# ensure postgres group and user exist
+- name: Add group "postgres" 
+  group:
+    name: postgres
+
+- name: Add user "postgres" 
+  user:
+    name: postgres
+    group: postgres
+
+  # Create SonarQube database user
+- name: Create SonarQube DB user
+  become_user: postgres
+  postgresql_user:
+    name: sonarqube
+    password: sonarqube
+
+ # Create SonarQube database
+- name: Create SonarQube database
+  become_user: postgres
+  postgresql_db:
+    name: sonarqube
+    owner: sonarqube
+
+- name: Check if SonarQube zip file exists 
+  stat: 
+    path: /tmp/sonarqube.zip 
+  register: sonarqube_zip
+
+# Download SonarQube
+- name: Download SonarQube
+  get_url:
+    url: https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-9.2.1.49989.zip
+    dest: /tmp/sonarqube.zip
+  when: not sonarqube_zip.stat.exists
+
+# Unzip SonarQube
+- name: Unzip SonarQube
+  unarchive:
+    src: /tmp/sonarqube.zip
+    dest: /opt/
+    remote_src: yes
+    creates: /opt/sonarqube-9.2.1.49989
+
+# Configure SonarQube
+- name: Configure SonarQube
+  template:
+    src: sonar.properties.j2
+    dest: /opt/sonarqube-9.2.1.49989/conf/sonar.properties
+
+# ensure sonarqube group and user exist
+- name: Add group "sonarqube" 
+  group:
+    name: sonarqube
+
+- name: Add user "sonarqube" 
+  user:
+    name: sonarqube
+    group: sonarqube
+
+# Change ownership of sonarqube files
+- name: Change ownership of sonarqube files
+  file:
+    path: /opt/sonarqube-9.2.1.49989
+    owner: sonarqube
+    group: sonarqube
+    recurse: yes  
+
+# Create a systemd service for SonarQube
+- name: Create SonarQube systemd service
+  copy:
+    content: |
+      [Unit]
+      Description=SonarQube service
+      After=network.target
+
+      [Service]
+      Type=forking
+      ExecStart=/opt/sonarqube-9.2.1.49989/bin/linux-x86-64/sonar.sh start
+      ExecStop=/opt/sonarqube-9.2.1.49989/bin/linux-x86-64/sonar.sh stop
+      User=sonarqube
+      Group=sonarqube
+      Restart=always
+
+      [Install]
+      WantedBy=multi-user.target
+    dest: /etc/systemd/system/sonarqube.service
+  notify: Restart SonarQube
+
+# Enable and start SonarQube service
+- name: Enable and start SonarQube service
+  systemd:
+    name: sonarqube
+    enabled: yes
+    state: started
