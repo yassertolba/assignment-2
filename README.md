@@ -602,7 +602,7 @@ Ubuntu_root_2 ansible_host=192.168.59.144 ansible_user=root ansible_ssh_pass="12
 ```terminal
 root@kane:/home/yasser/ansible/sonarqube# ansible-playbook -i hosts sonar_playbook.yml 
 
-PLAY [sonarqube playbook] *******************************************************************************************************************************************************************************
+<span style="color:#ffee03">PLAY [sonarqube playbook] </span> *******************************************************************************************************************************************************************************
 
 TASK [Gathering Facts] **********************************************************************************************************************************************************************************
 ok: [Ubuntu_root_2]
@@ -659,7 +659,7 @@ RUNNING HANDLER [sonarqube : Restart SonarQube] ********************************
 changed: [Ubuntu_root_2]
 
 PLAY RECAP **********************************************************************************************************************************************************************************************
-Ubuntu_root_2              : ok=17   changed=11   unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+Ubuntu_root_2              : ok=17   changed=11   unreachable=0    failed=0    <span style="color:#34abeb">skipped=1</span>    rescued=0    ignored=0   
 
 root@kane:/home/yasser/ansible/sonarqube# 
 
